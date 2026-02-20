@@ -1,9 +1,5 @@
 package org.jfrdemo;
 
-/*import com.github.pjfanning.xlsx.StreamingReader;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;*/
 import org.jfrdemo.excel.FromHowTo;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +7,40 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class HSSFTest {
+
+    @Test
+    void index() {
+
+        String s1 = "D12454";
+        String s2 = "AA555";
+        String s3 = "BA4444";
+
+
+        System.out.println(getIdx(s1));
+        System.out.println(getIdx(s2));
+        System.out.println(getIdx(s3));
+
+    }
+
+    private int getIdx(String value) {
+        int first = value.charAt(0) - 65;
+        int second = value.charAt(1) - 65;
+        boolean radix = false;
+
+        int index = 0;
+
+        if (second >= 0 && second <= 25) { //A-Z
+            radix = true;
+        }
+
+        if (radix) {
+            index = (first+1)*26+second;
+        } else {
+            index = first;
+        }
+
+        return index;
+    }
 
     @Test
     void zebraDir() throws IOException {
