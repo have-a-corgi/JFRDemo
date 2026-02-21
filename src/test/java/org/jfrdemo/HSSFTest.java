@@ -6,19 +6,17 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class HSSFTest {
 
     @Test
     void index() {
 
-        String s1 = "D12454";
-        String s2 = "AA555";
-        String s3 = "BA4444";
-
-
-        System.out.println(getIdx(s1));
-        System.out.println(getIdx(s2));
-        System.out.println(getIdx(s3));
+        assertEquals(1,getIdx("B1"));
+        assertEquals(24,getIdx("Y1111"));
+        assertEquals(26,getIdx("AA1"));
+        assertEquals(51,getIdx("AZ12345"));
 
     }
 
@@ -26,13 +24,10 @@ public class HSSFTest {
         int first = value.charAt(0) - 65;
         int second = value.charAt(1) - 65;
         boolean radix = false;
-
         int index = 0;
-
         if (second >= 0 && second <= 25) { //A-Z
             radix = true;
         }
-
         if (radix) {
             index = (first+1)*26+second;
         } else {
