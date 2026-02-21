@@ -1,5 +1,9 @@
 package org.jfrdemo;
 
+import org.apache.poi.hssf.eventusermodel.HSSFEventFactory;
+import org.apache.poi.hssf.eventusermodel.HSSFRequest;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.jfrdemo.excel.EventExample;
 import org.jfrdemo.excel.FromHowTo;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +13,32 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HSSFTest {
+
+    @Test
+    void oldFormat() throws IOException {
+        // create a new file input stream with the input file specified
+        // at the command line
+        FileInputStream fin = new FileInputStream("/home/dmitry/zebra/zebra3.xls");
+        // create a new org.apache.poi.poifs.filesystem.Filesystem
+        POIFSFileSystem poifs = new POIFSFileSystem(fin);
+       // get the Workbook (excel part) stream in a InputStream
+        InputStream din = poifs.createDocumentInputStream("Workbook");
+        // construct out HSSFRequest object
+        HSSFRequest req = new HSSFRequest();
+        // lazy listen for ALL records with the listener shown above
+        req.addListenerForAllRecords(new EventExample());
+        // create our event factory
+        HSSFEventFactory factory = new HSSFEventFactory();
+        // process our events based on the document input stream
+        factory.processEvents(req, din);
+        // once all the events are processed close our file input stream
+        fin.close();
+        // and our document input stream (don't want to leak these!)
+        din.close();
+        System.out.println("done.");
+    }
+
+
 
     @Test
     void index() {
