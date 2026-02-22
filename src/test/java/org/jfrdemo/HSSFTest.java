@@ -3,12 +3,14 @@ package org.jfrdemo;
 import org.apache.poi.hssf.eventusermodel.HSSFEventFactory;
 import org.apache.poi.hssf.eventusermodel.HSSFRequest;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.jfrdemo.excel.CustomRow;
 import org.jfrdemo.excel.EventExample;
 import org.jfrdemo.excel.FromHowTo;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,7 +28,8 @@ public class HSSFTest {
         // construct out HSSFRequest object
         HSSFRequest req = new HSSFRequest();
         // lazy listen for ALL records with the listener shown above
-        req.addListenerForAllRecords(new EventExample());
+        EventExample eventExample = new EventExample();
+        req.addListenerForAllRecords(eventExample);
         // create our event factory
         HSSFEventFactory factory = new HSSFEventFactory();
         // process our events based on the document input stream
@@ -36,6 +39,9 @@ public class HSSFTest {
         // and our document input stream (don't want to leak these!)
         din.close();
         System.out.println("done.");
+
+        Collection<CustomRow> values = eventExample.getRows().values();
+        System.out.println(values);
     }
 
 

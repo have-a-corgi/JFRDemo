@@ -1,11 +1,17 @@
 package org.jfrdemo.excel;
 
+import lombok.Getter;
 import org.apache.poi.hssf.eventusermodel.HSSFListener;
 import org.apache.poi.hssf.record.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@Getter
 public class EventExample implements HSSFListener {
 
     private SSTRecord sstrec;
+    private Map<Integer, CustomRow> rows = new HashMap<>();
 
     @Override
     public void processRecord(Record record) {
@@ -27,13 +33,13 @@ public class EventExample implements HSSFListener {
                 break;
             case RowRecord.sid:
                 RowRecord rowrec = (RowRecord) record;
-                System.out.println("Row found, first column at "
-                        + rowrec.getFirstCol() + " last column at " + rowrec.getLastCol());
+                CustomRow row = CustomRow.builder().rowIndex(rowrec.getRowNumber()).build();
+                rows.put(row.getRowIndex(), row);
                 break;
             case NumberRecord.sid:
                 NumberRecord numrec = (NumberRecord) record;
-                System.out.println("Cell found with value " + numrec.getValue()
-                        + " at row " + numrec.getRow() + " and column " + numrec.getColumn());
+                CustomCell cell = rows.get(numrec.getRow()).getCell(numrec.getColumn());
+                cell.setValue(String.valueOf(numrec.getValue()));
                 break;
             // SSTRecords store an array of unique strings used in Excel.
             case SSTRecord.sid:
@@ -45,8 +51,8 @@ public class EventExample implements HSSFListener {
                 break;
             case LabelSSTRecord.sid:
                 LabelSSTRecord lrec = (LabelSSTRecord) record;
-                System.out.println("String cell found with value "
-                        + sstrec.getString(lrec.getSSTIndex()) + " at row " + lrec.getRow() + " and column " + lrec.getColumn());
+                CustomCell cell2 = rows.get(lrec.getRow()).getCell(lrec.getColumn());
+                cell2.setValue(sstrec.getString(lrec.getSSTIndex()).getString());
                 break;
         }
 
