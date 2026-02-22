@@ -59,7 +59,7 @@ public class HSSFTest {
     private int getIdx(String value) {
         int first = value.charAt(0) - 65;
         int second = value.charAt(1) - 65;
-        return (second >= 0 && second <= 25) ? (first+1)*26+second : first;
+        return (second >= 0 && second < 26) ? (first+1)*26+second : first;
 
     }
 
